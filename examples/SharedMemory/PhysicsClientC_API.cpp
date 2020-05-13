@@ -2515,6 +2515,7 @@ B3_SHARED_API int b3GetStatusType(b3SharedMemoryStatusHandle statusHandle)
 {
 	const SharedMemoryStatus* status = (const SharedMemoryStatus*)statusHandle;
 	//b3Assert(status);
+	// b3Printf("statusType : %d\n", status->m_type);
 	if (status)
 	{
 		return status->m_type;
@@ -3335,6 +3336,34 @@ B3_SHARED_API b3SharedMemoryCommandHandle b3InitCreateSoftBodyAnchorConstraintCo
 	command->m_userConstraintArguments.m_childFrame[6] = 1.;
 
 	return (b3SharedMemoryCommandHandle)command;
+}
+
+B3_SHARED_API b3SharedMemoryCommandHandle b3SaveSoftBodyState(b3PhysicsClientHandle physClient, int softBodyUniqueId, const char* fileName)
+{
+	PhysicsClient* cl = (PhysicsClient*)physClient;
+	b3Assert(cl);
+	b3Assert(cl->canSubmitCommand());
+
+	if (cl->canSubmitCommand())
+	{
+		struct SharedMemoryCommand* command = cl->getAvailableSharedMemoryCommand();
+		b3Assert(command);
+		command->m_type = CMD_SAVE_SOFT_BODY_STATE;
+		command->m_saveSoftBodyStateArguments.m_softBodyUniqueId = softBodyUniqueId;
+		int len = strlen(fileName);
+		if (len < MAX_FILENAME_LENGTH)
+		{
+			strcpy(command->m_saveSoftBodyStateArguments.m_fileName, fileName);
+		}
+		else
+		{
+			command->m_saveSoftBodyStateArguments.m_fileName[0] = 0;
+		}
+		// command->m_updateFlags = SAVE_SOFT_BODY_STATE_FILE_NAME;
+
+		return (b3SharedMemoryCommandHandle)command;
+	}
+	return 0;
 }
 
 B3_SHARED_API b3SharedMemoryCommandHandle b3InitCreateUserConstraintCommand(b3PhysicsClientHandle physClient, int parentBodyUniqueId, int parentJointIndex, int childBodyUniqueId, int childJointIndex, struct b3JointInfo* info)

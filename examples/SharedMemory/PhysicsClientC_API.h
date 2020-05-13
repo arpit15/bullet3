@@ -658,6 +658,8 @@ extern "C"
 	
 	B3_SHARED_API b3SharedMemoryCommandHandle b3InitCreateSoftBodyAnchorConstraintCommand(b3PhysicsClientHandle physClient, int softBodyUniqueId, int nodeIndex, int bodyUniqueId, int linkIndex, const double bodyFramePosition[3]);
 
+	B3_SHARED_API b3SharedMemoryCommandHandle b3SaveSoftBodyState(b3PhysicsClientHandle physClient, int softBodyUniqueId, const char* fileName);
+
 	B3_SHARED_API b3SharedMemoryCommandHandle b3RequestVREventsCommandInit(b3PhysicsClientHandle physClient);
 	B3_SHARED_API void b3VREventsSetDeviceTypeFilter(b3SharedMemoryCommandHandle commandHandle, int deviceTypeFilter);
 

@@ -880,6 +880,8 @@ public:
     
 	void loadDeformableBody(const std::string &fileName, const struct b3RobotSimulatorLoadDeformableBodyArgs &args);
 
+	void saveSoftBodyState(int bodyUniqueId, const std::string &fileName);
+
 	virtual void setGuiHelper(struct GUIHelperInterface *guiHelper);
 	virtual struct GUIHelperInterface *getGuiHelper();
 

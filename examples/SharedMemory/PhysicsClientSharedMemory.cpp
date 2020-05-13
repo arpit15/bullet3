@@ -1474,6 +1474,21 @@ const SharedMemoryStatus* PhysicsClientSharedMemory::processServerStatus()
                           }
                           break;
 			}
+			case CMD_SAVE_SOFT_BODY_STATE_FAILED:
+			{
+				B3_PROFILE("CMD_SAVE_SOFT_BODY_STATE_FAILED");
+
+                            if (m_data->m_verboseOutput)
+                            {
+                                b3Printf("Server failed saving the SoftBody state...\n");
+                            }
+				break;
+			}
+			case CMD_SAVE_SOFT_BODY_STATE_COMPLETED:
+			{
+				B3_PROFILE("CMD_SAVE_SOFT_BODY_STATE_COMPLETED");
+				break;
+			}
 			case CMD_SYNC_USER_DATA_FAILED:
 			{
 				b3Warning("Synchronizing user data failed.");

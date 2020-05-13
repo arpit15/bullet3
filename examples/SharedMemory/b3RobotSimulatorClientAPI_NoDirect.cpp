@@ -1258,6 +1258,17 @@ void b3RobotSimulatorClientAPI_NoDirect::loadDeformableBody(const std::string& f
 	b3SubmitClientCommandAndWaitStatus(m_data->m_physicsClientHandle, command);
 }
 
+void b3RobotSimulatorClientAPI_NoDirect::saveSoftBodyState(int bodyUniqueId, const std::string &fileName)
+{
+	if (!isConnected())
+	{
+		b3Warning("Not connected");
+		return;
+	}
+	b3SharedMemoryCommandHandle command = b3SaveSoftBodyState(m_data->m_physicsClientHandle, bodyUniqueId, fileName.c_str());
+	b3SubmitClientCommandAndWaitStatus(m_data->m_physicsClientHandle, command);
+}
+
 void b3RobotSimulatorClientAPI_NoDirect::getMouseEvents(b3MouseEventsData* mouseEventsData)
 {
 	mouseEventsData->m_numMouseEvents = 0;

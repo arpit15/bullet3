@@ -2199,6 +2199,42 @@ static PyObject* pybullet_createSoftBodyAnchor(PyObject* self, PyObject* args, P
 	return NULL;
 }
 
+static PyObject* pybullet_saveSoftBodyState(PyObject *self, PyObject* args, PyObject* keywds)
+{
+	b3SharedMemoryCommandHandle commandHandle;
+	int softBodyUniqueId = -1;
+	const char* fileName = "";
+	b3SharedMemoryStatusHandle statusHandle;
+	int statusType;
+	int physicsClientId = 0;
+	b3PhysicsClientHandle sm = 0;
+	static char* kwlist[] = {"softBodyBodyUniqueId", "fileName",
+							 NULL};
+
+	if (!PyArg_ParseTupleAndKeywords(args, keywds, "is|i", kwlist, &softBodyUniqueId, &fileName,&physicsClientId))
+	{
+		return NULL;
+	}
+
+	sm = getPhysicsClient(physicsClientId);
+	if (sm == 0)
+	{
+		PyErr_SetString(SpamError, "Not connected to physics server.");
+		return NULL;
+	}
+
+	commandHandle = b3SaveSoftBodyState(sm, softBodyUniqueId, fileName);
+	statusHandle = b3SubmitClientCommandAndWaitStatus(sm, commandHandle);
+	statusType = b3GetStatusType(statusHandle);
+	
+	if (statusType == CMD_SAVE_SOFT_BODY_STATE_COMPLETED)
+	{
+		return Py_None;
+	}
+
+	PyErr_SetString(SpamError, "saveSoftBodyState failed.");
+	return NULL;
+}
 
 #endif
 
@@ -12087,6 +12123,9 @@ static PyMethodDef SpamMethods[] = {
 
 	{"createSoftBodyAnchor", (PyCFunction)pybullet_createSoftBodyAnchor, METH_VARARGS | METH_KEYWORDS,
 	 "Create an anchor (attachment) between a soft body and a rigid or multi body."},
+
+	 {"saveSoftBodyState", (PyCFunction)pybullet_saveSoftBodyState, METH_VARARGS | METH_KEYWORDS,
+	 "Save the soft body as a mesh file"},
 
 #endif
 	{"loadBullet", (PyCFunction)pybullet_loadBullet, METH_VARARGS | METH_KEYWORDS,

@@ -8771,6 +8771,26 @@ bool PhysicsServerCommandProcessor::processLoadSoftBodyCommand(const struct Shar
 
 }
 
+bool PhysicsServerCommandProcessor::processSaveSoftBodyStateCommand(const struct SharedMemoryCommand& clientCmd, struct SharedMemoryStatus& serverStatusOut, char* bufferServerToClient, int bufferSizeInBytes)
+{
+	serverStatusOut.m_type = CMD_SAVE_SOFT_BODY_STATE_FAILED;
+	bool hasStatus = true;
+#ifndef SKIP_SOFT_BODY_MULTI_BODY_DYNAMICS_WORLD
+	InternalBodyHandle* sbodyHandle = m_data->m_bodyHandles.getHandle(clientCmd.m_userConstraintArguments.m_parentBodyIndex);
+		if (sbodyHandle)
+		{
+			if (sbodyHandle->m_softBody)
+			{
+				btSoftBody* psb = sbodyHandle->m_softBody;
+	
+				btSoftBodyHelpers::writeObj(clientCmd.m_saveSoftBodyStateArguments.m_fileName, psb);
+				serverStatusOut.m_type = CMD_SAVE_SOFT_BODY_STATE_COMPLETED;
+			}
+		}
+#endif
+	return hasStatus;
+}
+
 bool PhysicsServerCommandProcessor::processCreateSensorCommand(const struct SharedMemoryCommand& clientCmd, struct SharedMemoryStatus& serverStatusOut, char* bufferServerToClient, int bufferSizeInBytes)
 {
 	bool hasStatus = true;
@@ -13332,6 +13352,11 @@ bool PhysicsServerCommandProcessor::processCommand(const struct SharedMemoryComm
 		case CMD_LOAD_SOFT_BODY:
 		{
 			hasStatus = processLoadSoftBodyCommand(clientCmd, serverStatusOut, bufferServerToClient, bufferSizeInBytes);
+			break;
+		}
+		case CMD_SAVE_SOFT_BODY_STATE:
+		{
+			hasStatus = processSaveSoftBodyStateCommand(clientCmd, serverStatusOut, bufferServerToClient, bufferSizeInBytes);
 			break;
 		}
 		case CMD_CREATE_SENSOR:

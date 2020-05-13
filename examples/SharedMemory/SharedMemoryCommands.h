@@ -547,6 +547,12 @@ struct LoadSoftBodyArgs
 	double m_repulsionStiffness;
 };
 
+struct SaveSoftBodyStateArgs
+{
+	int m_softBodyUniqueId;
+	char m_fileName[MAX_FILENAME_LENGTH];
+};
+
 struct b3LoadSoftBodyResultArgs
 {
 	int m_objectUniqueId;
@@ -1154,6 +1160,7 @@ struct SharedMemoryCommand
 		struct UserDebugDrawArgs m_userDebugDrawArgs;
 		struct RequestRaycastIntersections m_requestRaycastIntersections;
 		struct LoadSoftBodyArgs m_loadSoftBodyArguments;
+		struct SaveSoftBodyStateArgs m_saveSoftBodyStateArguments;
 		struct VRCameraState m_vrCameraStateArguments;
 		struct StateLoggingRequest m_stateLoggingArguments;
 		struct ConfigureOpenGLVisualizerRequest m_configureOpenGLVisualizerArguments;
