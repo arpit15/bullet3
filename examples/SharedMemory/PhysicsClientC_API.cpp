@@ -2515,7 +2515,6 @@ B3_SHARED_API int b3GetStatusType(b3SharedMemoryStatusHandle statusHandle)
 {
 	const SharedMemoryStatus* status = (const SharedMemoryStatus*)statusHandle;
 	//b3Assert(status);
-	// b3Printf("statusType : %d\n", status->m_type);
 	if (status)
 	{
 		return status->m_type;
